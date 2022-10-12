@@ -31,10 +31,9 @@ class Cell extends StatelessWidget {
   final GameController controller = Get.find<GameController>();
 
   static const Map<chess_piece, Image?> pieceToWidget = {
-    chess_piece.empty:
-        Image(image: AssetImage('../lib/assets/ChessSprites/WhitePawn.png')),
+    chess_piece.empty: null,
     chess_piece.whitePawn:
-        Image(image: AssetImage("../lib/assets/CshessSprites/WhitePawn.png")),
+        Image(image: AssetImage("../lib/assets/ChessSprites/WhitePawn.png")),
     chess_piece.whiteKnight:
         Image(image: AssetImage("../lib/assets/ChessSprites/WhiteKnight.png")),
     chess_piece.whiteBishop:
@@ -59,20 +58,19 @@ class Cell extends StatelessWidget {
         Image(image: AssetImage("../lib/assets/ChessSprites/BlackKing.png")),
   };
 
-  Image _buildCoin() {
+  Image? _buildCoin() {
     piece =
         controller.intToChessPiece[controller.board[columnNumber][rownumber]];
-    print(piece);
-    return pieceToWidget[piece]!;
+    return pieceToWidget[piece];
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: darksquare ? Colors.green.shade500 : Colors.brown.shade100),
-      height: 25,
-      width: 25,
+          color: darksquare ? Colors.green.shade500 : Colors.yellow.shade100),
+      height: MediaQuery.of(context).size.width * (1 / 8),
+      width: MediaQuery.of(context).size.width * (1 / 8),
       child: _buildCoin(),
     );
   }
