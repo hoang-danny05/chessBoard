@@ -64,14 +64,23 @@ class Cell extends StatelessWidget {
     return pieceToWidget[piece];
   }
 
+  MouseCursor _getCursor() {
+    return piece == chess_piece.empty
+        ? SystemMouseCursors.basic
+        : SystemMouseCursors.click;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: darksquare ? Colors.green.shade500 : Colors.yellow.shade100),
-      height: MediaQuery.of(context).size.width * (1 / 8),
-      width: MediaQuery.of(context).size.width * (1 / 8),
-      child: _buildCoin(),
+    return MouseRegion(
+      child: Container(
+        decoration: BoxDecoration(
+            color: darksquare ? Colors.green.shade500 : Colors.yellow.shade100),
+        height: MediaQuery.of(context).size.width * (1 / 8),
+        width: MediaQuery.of(context).size.width * (1 / 8),
+        child: _buildCoin(),
+      ),
+      cursor: _getCursor(),
     );
   }
 }
