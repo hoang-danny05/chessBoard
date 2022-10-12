@@ -8,12 +8,12 @@ class BoardColumn extends StatelessWidget {
   final GameController controller = Get.find<GameController>();
   BoardColumn({super.key, required this.columnNumber});
 
-  List<Cell> _buildColumn() {
+  List<Cell> _buildRow() {
     int isDarksquare = columnNumber.isEven ? 1 : 0;
     int i = 0;
     return controller.board[columnNumber]
         .map((cell) => Cell(
-              rownumber: i++,
+              rowNumber: i++,
               columnNumber: columnNumber,
               darksquare: isDarksquare++ % 2 == 0,
             ))
@@ -22,8 +22,8 @@ class BoardColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: _buildColumn(),
+    return Row(
+      children: _buildRow(),
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
     );

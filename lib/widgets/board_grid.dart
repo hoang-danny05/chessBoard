@@ -1,6 +1,6 @@
+import 'package:chess_board/widgets/board_column.dart';
 import 'package:flutter/material.dart';
 import '../controllers/game_controller.dart';
-import 'board_column.dart';
 import 'package:get/get.dart';
 
 class BoardGrid extends StatelessWidget {
@@ -14,6 +14,8 @@ class BoardGrid extends StatelessWidget {
         .map((columns) => BoardColumn(
               columnNumber: i++,
             ))
+        .toList()
+        .reversed
         .toList();
   }
 
@@ -21,7 +23,7 @@ class BoardGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.blue,
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: _buildGrid(),

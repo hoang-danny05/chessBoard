@@ -19,13 +19,13 @@ enum chess_piece {
 }
 
 class Cell extends StatelessWidget {
-  late final int columnNumber, rownumber;
+  late final int columnNumber, rowNumber;
   late final bool darksquare;
   chess_piece piece = chess_piece.empty;
   Cell(
       {super.key,
       required this.columnNumber,
-      required this.rownumber,
+      required this.rowNumber,
       required this.darksquare});
 
   final GameController controller = Get.find<GameController>();
@@ -60,7 +60,7 @@ class Cell extends StatelessWidget {
 
   Image? _buildCoin() {
     piece =
-        controller.intToChessPiece[controller.board[columnNumber][rownumber]];
+        controller.intToChessPiece[controller.board[columnNumber][rowNumber]];
     return pieceToWidget[piece];
   }
 
