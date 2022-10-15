@@ -8,11 +8,12 @@ class GameController extends GetxController {
   RxList<List<int>> _board = RxList<List<int>>(); // board that contains pieces
   List<List<int>> get board => _board.value;
   set board(List<List<int>> setValue) => _board.value = setValue;
+  //BOARD IS INDEXED AS [COLUMN][ROW]
   var _actionBoard = RxList<
       List<int>>(); // contains selected piece and squares where pieces can move
   List<List<int>> get actionBoard => _actionBoard.value;
   set actionBoard(List<List<int>> newValue) => _actionBoard.value = newValue;
-
+  //ACTIONBOARD IS INDEXED AS [ROW][COLUMN]
   @override
   void onInit() {
     super.onInit();
@@ -63,25 +64,26 @@ class GameController extends GetxController {
               (PictureElement) => PictureElement == 2,
             ))) {
           _resetActions();
-          print("REMOVED last selected piece");
         }
         final List<List<int>> newBoard = List<List<int>>.from(actionBoard);
+        print("Click on ID:${board[column][row]}");
+        print("[$board]");
         newBoard[row][column] = 2;
         actionBoard = newBoard;
         //TODO: updateMovable(row, column);
-        print("inactive square clicked, marking.");
         break;
       case 1:
         //TODO: move piece method here
         break;
       case 2:
         _resetActions();
-        print("active square clicked, resetting.");
         break;
     }
-    switch (board[row][column]) {
+    switch (board[column][row]) {
       case 0:
-        board[row][column] = 1;
+        var newBoard = List<List<int>>.from(actionBoard);
+        newBoard[row][column] = 1;
+        actionBoard = newBoard;
     }
     update();
   }

@@ -71,7 +71,6 @@ class Cell extends StatelessWidget {
 
   void _onTap() {
     controller.cellClicked(row: rowNumber, column: columnNumber);
-    print('click!');
   }
 
   Container _buildContainer(BuildContext context) {
