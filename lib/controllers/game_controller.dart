@@ -1,11 +1,17 @@
-import 'package:chess_board/widgets/board_grid.dart';
+// ignore_for_file: prefer_final_fields
+
 import 'package:chess_board/widgets/cell.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class GameController extends GetxController {
-  RxList<List<int>> _board = RxList<List<int>>();
+  RxList<List<int>> _board = RxList<List<int>>(); // board that contains pieces
   List<List<int>> get board => _board.value;
   set board(List<List<int>> setValue) => _board.value = setValue;
+  var _actionBoard = RxList<
+      List<int>>(); // contains selected piece and squares where pieces can move
+  List<List<int>> get actionBoard => _actionBoard.value;
+  set actionBoard(List<List<int>> newValue) => _actionBoard.value = newValue;
 
   @override
   void onInit() {
@@ -26,6 +32,58 @@ class GameController extends GetxController {
       List.filled(8, 12),
       _whitePieces.map((pieceInt) => pieceInt + 6).toList(),
     ];
+
+    _resetActions();
+  }
+
+  // static final List<List<int>> emptyActions = [
+
+  // ];
+
+  void _resetActions() {
+    actionBoard = [
+      List.filled(8, 0),
+      List.filled(8, 0),
+      List.filled(8, 0),
+      List.filled(8, 0),
+      List.filled(8, 0),
+      List.filled(8, 0),
+      List.filled(8, 0),
+      List.filled(8, 0),
+    ];
+  }
+
+  void cellClicked({required row, required column}) {
+    //0 => not selected
+    //1 => currently selected piece may move to spot
+    //2 => piece is currently selected
+    switch (actionBoard[row][column]) {
+      case 0:
+        if (actionBoard.any((Column) => Column.any(
+              (PictureElement) => PictureElement == 2,
+            ))) {
+          _resetActions();
+          print("REMOVED last selected piece");
+        }
+        final List<List<int>> newBoard = List<List<int>>.from(actionBoard);
+        newBoard[row][column] = 2;
+        actionBoard = newBoard;
+        //TODO: updateMovable(row, column);
+        print("inactive square clicked, marking.");
+        break;
+      case 1:
+        //TODO: move piece method here
+        break;
+      case 2:
+        _resetActions();
+        print("active square clicked, resetting.");
+        break;
+    }
+    switch (board[row][column]) {
+      case 0:
+        board[row][column] = 1;
+    }
+    update();
   }
 
   Map intToChessPiece = {

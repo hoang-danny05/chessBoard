@@ -1,3 +1,5 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:chess_board/controllers/game_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +21,8 @@ enum chess_piece {
 }
 
 class Cell extends StatelessWidget {
+  final GameController controller = Get.find<GameController>();
+
   late final int columnNumber, rowNumber;
   late final bool darksquare;
   chess_piece piece = chess_piece.empty;
@@ -26,9 +30,10 @@ class Cell extends StatelessWidget {
       {super.key,
       required this.columnNumber,
       required this.rowNumber,
-      required this.darksquare});
-
-  final GameController controller = Get.find<GameController>();
+      required this.darksquare}) {
+    piece =
+        controller.intToChessPiece[controller.board[columnNumber][rowNumber]];
+  }
 
   static const Map<chess_piece, Image?> pieceToWidget = {
     chess_piece.empty: null,
@@ -58,29 +63,54 @@ class Cell extends StatelessWidget {
         Image(image: AssetImage("../lib/assets/ChessSprites/BlackKing.png")),
   };
 
-  Image? _buildCoin() {
-    piece =
-        controller.intToChessPiece[controller.board[columnNumber][rowNumber]];
-    return pieceToWidget[piece];
-  }
-
   MouseCursor _getCursor() {
     return piece == chess_piece.empty
         ? SystemMouseCursors.basic
         : SystemMouseCursors.click;
   }
 
+  void _onTap() {
+    controller.cellClicked(row: rowNumber, column: columnNumber);
+    print('click!');
+  }
+
+  Container _buildContainer(BuildContext context) {
+    print("Da container do be rebuildin");
+    return Container(
+      decoration: BoxDecoration(
+          color: controller.actionBoard[rowNumber][columnNumber] == 2
+              ? Colors.yellow
+              : darksquare
+                  ? Colors.green.shade500
+                  : Colors.yellow.shade100),
+      height: MediaQuery.of(context).size.width * (1 / 8),
+      width: MediaQuery.of(context).size.width * (1 / 8),
+      child: pieceToWidget[piece],
+    );
+  }
+
+  Widget _rootBuild(BuildContext context) {
+    return GestureDetector(
+      child: MouseRegion(
+        child: Obx(() => Container(
+              decoration: BoxDecoration(
+                  color: controller.actionBoard[rowNumber][columnNumber] == 2
+                      ? Colors.yellow
+                      : darksquare
+                          ? Colors.green.shade500
+                          : Colors.yellow.shade100),
+              height: MediaQuery.of(context).size.width * (1 / 8),
+              width: MediaQuery.of(context).size.width * (1 / 8),
+              child: pieceToWidget[piece],
+            )),
+        cursor: _getCursor(),
+      ),
+      onTap: _onTap,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      child: Container(
-        decoration: BoxDecoration(
-            color: darksquare ? Colors.green.shade500 : Colors.yellow.shade100),
-        height: MediaQuery.of(context).size.width * (1 / 8),
-        width: MediaQuery.of(context).size.width * (1 / 8),
-        child: _buildCoin(),
-      ),
-      cursor: _getCursor(),
-    );
+    return _rootBuild(context);
   }
 }
