@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
 import 'package:chess_board/widgets/cell.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class GameController extends GetxController {
@@ -59,6 +60,7 @@ class GameController extends GetxController {
       required final List<List<int>> newActions}) {
     switch (board[row][column]) {
       case 0:
+        print("empty square selected...");
         break;
       case 6:
         print("pawn selected");
@@ -86,11 +88,13 @@ class GameController extends GetxController {
     // });
     switch (actionBoard[row][column]) {
       case 0:
-        if (actionBoard.any((Column) => Column.any(
-              (PictureElement) => PictureElement == 2,
+        if (actionBoard.any((column) => column.any(
+              // check for any selected elements, reset if true
+              (cellAction) => cellAction == 2,
             ))) {
           _resetActions();
         }
+        //copies actions to reassign later
         final List<List<int>> newActions = List<List<int>>.from(actionBoard);
         newActions[row][column] = 2;
         //TODO: updateMovable(row, column, newActions);
@@ -108,7 +112,7 @@ class GameController extends GetxController {
     switch (board[row][column]) {
       case 0:
         var newBoard = List<List<int>>.from(actionBoard);
-        newBoard[row][column] = 1;
+        newBoard[row][column] = 0;
         actionBoard = newBoard;
     }
     update();
