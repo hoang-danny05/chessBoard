@@ -1,4 +1,4 @@
-import 'package:chess_board/widgets/board_column.dart';
+import 'package:chess_board/widgets/board_row.dart';
 import 'package:flutter/material.dart';
 import '../controllers/game_controller.dart';
 import 'package:get/get.dart';
@@ -8,11 +8,11 @@ class BoardGrid extends StatelessWidget {
 
   final GameController controller = Get.find<GameController>();
 
-  List<BoardColumn> _buildGrid() {
+  List<BoardRow> _buildGrid() {
     int i = 0;
     return controller.board
-        .map((columns) => BoardColumn(
-              columnNumber: i++,
+        .map((rows) => BoardRow(
+              rowNumber: i++,
             ))
         .toList()
         .reversed

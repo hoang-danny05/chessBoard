@@ -32,7 +32,7 @@ class Cell extends StatelessWidget {
       required this.rowNumber,
       required this.darksquare}) {
     piece =
-        controller.intToChessPiece[controller.board[columnNumber][rowNumber]];
+        controller.intToChessPiece[controller.board[rowNumber][columnNumber]];
   }
 
   static const Map<chess_piece, Image?> pieceToWidget = {
@@ -91,17 +91,40 @@ class Cell extends StatelessWidget {
   Widget _rootBuild(BuildContext context) {
     return GestureDetector(
       child: MouseRegion(
-        child: Obx(() => Container(
-              decoration: BoxDecoration(
-                  color: controller.actionBoard[rowNumber][columnNumber] == 2
-                      ? Colors.yellow
-                      : darksquare
-                          ? Colors.green.shade500
-                          : Colors.yellow.shade100),
-              height: MediaQuery.of(context).size.width * (1 / 8),
-              width: MediaQuery.of(context).size.width * (1 / 8),
-              child: pieceToWidget[piece],
-            )),
+        child: Obx(
+          () => Stack(
+            alignment: Alignment.center,
+            fit: StackFit.passthrough,
+            children: [
+              Container(
+                // background of the cell
+                decoration: BoxDecoration(
+                    color: controller.actionBoard[rowNumber][columnNumber] == 2
+                        ? Colors.yellow
+                        : darksquare
+                            ? Colors.green.shade500
+                            : Colors.yellow.shade100),
+                height: MediaQuery.of(context).size.width * (1 / 8),
+                width: MediaQuery.of(context).size.width * (1 / 8),
+                child: pieceToWidget[piece],
+              ),
+              Positioned(
+                // indicates if place is movable or not
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 25,
+                  height: MediaQuery.of(context).size.width / 25,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        MediaQuery.of(context).size.width / 16),
+                    color: controller.actionBoard[rowNumber][columnNumber] == 1
+                        ? const Color(0xa0111111)
+                        : const Color(0x00000000),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         cursor: _getCursor(),
       ),
       onTap: _onTap,

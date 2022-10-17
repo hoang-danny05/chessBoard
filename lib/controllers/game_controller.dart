@@ -1,14 +1,13 @@
 // ignore_for_file: prefer_final_fields
 
 import 'package:chess_board/widgets/cell.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class GameController extends GetxController {
   RxList<List<int>> _board = RxList<List<int>>(); // board that contains pieces
   List<List<int>> get board => _board.value;
   set board(List<List<int>> setValue) => _board.value = setValue;
-  //BOARD IS INDEXED AS [COLUMN][ROW]
+  //BOARD IS INDEXED AS [ROW][COLUMN]
   var _actionBoard = RxList<
       List<int>>(); // contains selected piece and squares where pieces can move
   List<List<int>> get actionBoard => _actionBoard.value;
@@ -54,10 +53,37 @@ class GameController extends GetxController {
     ];
   }
 
+  void updateActions(
+      {required final int row,
+      required final int column,
+      required final List<List<int>> newActions}) {
+    switch (board[row][column]) {
+      case 0:
+        break;
+      case 6:
+        print("pawn selected");
+        newActions[row + 1][column] = 1;
+        if (row == 1) {
+          newActions[row + 2][column] = 1;
+        }
+        break;
+      default:
+        print("Piece at row $row and column $column selected.");
+    }
+  }
+
   void cellClicked({required row, required column}) {
     //0 => not selected
     //1 => currently selected piece may move to spot
     //2 => piece is currently selected
+    // print("Click on ID:${board[column][row]}");
+    // board.forEach((element) {
+    //   print(element);
+    // });
+    // print("ACTIONS:");
+    // actionBoard.forEach((element) {
+    //   print(element);
+    // });
     switch (actionBoard[row][column]) {
       case 0:
         if (actionBoard.any((Column) => Column.any(
@@ -65,21 +91,21 @@ class GameController extends GetxController {
             ))) {
           _resetActions();
         }
-        final List<List<int>> newBoard = List<List<int>>.from(actionBoard);
-        print("Click on ID:${board[column][row]}");
-        print("[$board]");
-        newBoard[row][column] = 2;
-        actionBoard = newBoard;
-        //TODO: updateMovable(row, column);
+        final List<List<int>> newActions = List<List<int>>.from(actionBoard);
+        newActions[row][column] = 2;
+        //TODO: updateMovable(row, column, newActions);
+        updateActions(row: row, column: column, newActions: newActions);
+        actionBoard = newActions;
         break;
       case 1:
         //TODO: move piece method here
         break;
       case 2:
         _resetActions();
+
         break;
     }
-    switch (board[column][row]) {
+    switch (board[row][column]) {
       case 0:
         var newBoard = List<List<int>>.from(actionBoard);
         newBoard[row][column] = 1;
