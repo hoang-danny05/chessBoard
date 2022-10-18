@@ -106,7 +106,8 @@ class Cell extends StatelessWidget {
                             : Colors.yellow.shade100),
                 height: MediaQuery.of(context).size.width * (1 / 8),
                 width: MediaQuery.of(context).size.width * (1 / 8),
-                child: pieceToWidget[piece],
+                child: pieceToWidget[controller.intToChessPiece[
+                    controller.board[rowNumber][columnNumber]]],
               ),
               Positioned(
                 // indicates if place is movable or not

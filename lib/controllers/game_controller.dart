@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
+import 'dart:js_util';
+
 import 'package:chess_board/widgets/cell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -59,6 +61,7 @@ class GameController extends GetxController {
       required final int column,
       required final List<List<int>> newActions}) {
     switch (board[row][column]) {
+      //Moving rules are here.
       case 0:
         print("empty square selected...");
         break;
@@ -67,6 +70,12 @@ class GameController extends GetxController {
         newActions[row + 1][column] = 1;
         if (row == 1) {
           newActions[row + 2][column] = 1;
+        }
+        break;
+      case 12:
+        newActions[row - 1][column] == 1;
+        if (row == 6) {
+          newActions[row - 2][column] = 1;
         }
         break;
       default:
@@ -103,6 +112,23 @@ class GameController extends GetxController {
         break;
       case 1:
         //TODO: move piece method here
+        //find selected piece
+        int rowFrom = 0;
+        int columnFrom = 0;
+        for (; rowFrom < 8; rowFrom++) {
+          if (actionBoard[rowFrom].contains(2)) {
+            columnFrom = actionBoard[rowFrom].indexOf(2);
+            break;
+          }
+        }
+        //copy old board
+        var newBoard = List<List<int>>.from(board);
+        //set clicked space to the selected place piece
+        newBoard[row][column] = newBoard[rowFrom][columnFrom];
+        //remove previus position of the piece
+        newBoard[rowFrom][columnFrom] = 0;
+        board = newBoard;
+        _resetActions();
         break;
       case 2:
         _resetActions();
