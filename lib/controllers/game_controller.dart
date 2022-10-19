@@ -67,16 +67,13 @@ class GameController extends GetxController {
         break;
       case 6:
         print("pawn selected");
-        newActions[row + 1][column] = 1;
-        if (row == 1) {
-          newActions[row + 2][column] = 1;
-        }
+        _updatePawnAction(
+            row: row, column: column, newActions: newActions, isWhite: true);
         break;
       case 12:
         newActions[row - 1][column] == 1;
-        if (row == 6) {
-          newActions[row - 2][column] = 1;
-        }
+        _updatePawnAction(
+            row: row, column: column, newActions: newActions, isWhite: false);
         break;
       default:
         print("Piece at row $row and column $column selected.");
@@ -159,4 +156,28 @@ class GameController extends GetxController {
     11: chess_piece.blackRook,
     12: chess_piece.blackPawn,
   };
+
+  void _updatePawnAction({
+    required final int row,
+    required final int column,
+    required List<List<int>> newActions,
+    required final bool isWhite,
+  }) {
+    final int modifier = isWhite ? 1 : -1;
+    // check for movement (not taking pieces)
+    if (board[row + 1 * modifier][column] == 0) {
+      newActions[row + 1 * modifier][column] = 1;
+      if ((row == 1 && isWhite) ||
+          (row == 6 && !isWhite) && board[row + 2 * modifier][column] == 0) {
+        newActions[row + 2 * modifier][column] = 1;
+      }
+    }
+    // check for takable pieces
+    if (board[row + 1 * modifier][column + 1] != 0) {
+      newActions[row + 1 * modifier][column + 1] = 1;
+    }
+    if (board[row + 1 * modifier][column - 1] != 0) {
+      newActions[row + 1 * modifier][column - 1] = 1;
+    }
+  }
 }
